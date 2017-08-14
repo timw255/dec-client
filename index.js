@@ -107,7 +107,7 @@ function DECClient (options) {
     };
 };
 
-Client.prototype = {
+DECClient.prototype = {
     addMapping: function (subjectKey, secondSubjectKey, secondDataSource) {
         return this.writeSentence({
             subjectKey: subjectKey,
