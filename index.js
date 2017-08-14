@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 
 function DECClient (options) {
     this.constants = {
-        sdkVersion: "node-1.0.0",
+        sdkVersion: "node-1.0.3",
         endpoints: {
             apiServer: "https://api.dec.sitefinity.com"
         },
@@ -31,7 +31,7 @@ function DECClient (options) {
     this.apiServerUrl = options.apiServerUrl || this.constants.endpoints.apiServer;
     this.sentences = [];
 
-    var getEndpointUrl = function (apiServer, apiKey, source) {
+    this.getEndpointUrl = function (apiServer, apiKey, source) {
         return apiServer + '/collect/v2/data-centers/' + apiKey + '/datasources/' + source + '/interactions';
     };
  
@@ -46,7 +46,7 @@ function DECClient (options) {
         return requestOptions;
     };
  
-    var getRequestOptions = function (data, httpMethod, url, headers) {
+    this.getRequestOptions = function (data, httpMethod, url, headers) {
         var requestOptions = {
             method: httpMethod,
             url: url,
