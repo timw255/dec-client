@@ -40,8 +40,8 @@ function DECClient (options) {
             data = data[0];
         }
  
-        var url = getEndpointUrl(parameters.apiServerUrl, parameters.apiKey, parameters.source);
-        var requestOptions = getRequestOptions(data, 'POST', url, headers);
+        var url = this.getEndpointUrl(parameters.apiServerUrl, parameters.apiKey, parameters.source);
+        var requestOptions = this.getRequestOptions(data, 'POST', url, headers);
  
         return requestOptions;
     };
@@ -64,12 +64,12 @@ function DECClient (options) {
         if (!this.authToken) throw new Error('You must provide "authToken" when using the Personalization Client.');
 
         var url = this.apiServerUrl + endpoint;
-        var options = getRequestOptions(null, 'GET', url, headers);
+        var options = this.getRequestOptions(null, 'GET', url, headers);
 
         options.headers[this.constants.headers.authorization] = this.authToken;
         options.headers[this.constants.headers.datacenterkey] = this.apiKey;
 
-        return makeRequest(options);
+        return this.makeRequest(options);
     };
 
     this.makeRequest = function (options) {
@@ -104,59 +104,8 @@ function DECClient (options) {
             });
         });
     };
-};
 
-DECClient.prototype = {
-    addMapping: function (subjectKey, secondSubjectKey, secondDataSource) {
-        return writeSentence({
-            subjectKey: subjectKey,
-            mappedTo: [{
-                "S": secondSubjectKey,
-                "DS": secondDataSource
-            }]
-        });
-    },
-
-    isInCampaigns: function (campaignIds, subjectKey) {
-        if (!campaignIds) throw new Error('You must provide "campaignIds" argument when using the "isInCampaigns" method.');
-        if (!subjectKey) throw new Error('You must provide "subjectKey" argument when using the "isInCampaigns" method.');
-
-        var headers = {};
-
-        headers[this.constants.headers.subject] = subjectKey;
-        headers[this.constants.headers.ids] = campaignIds;
-        headers[this.constants.headers.datasource] = this.datasource;
-
-        return this.call('/analytics/v1/campaigns/isin', headers);
-    },
-
-    isInLeads: function (scoringIds, subjectKey) {
-        if (!scoringIds) throw new Error('You must provide "scoringIds" argument when using the "isInLeads" method.');
-        if (!subjectKey) throw new Error('You must provide "subjectKey" argument when using the "isInLeads" method.');
-
-        var headers = {};
-
-        headers[this.constants.headers.datasource] = this.datasource;
-        headers[this.constants.headers.subject] = subjectKey;
-        headers[this.constants.headers.ids] = scoringIds;
-
-        return this.call('/analytics/v2/scorings/leads/in', headers);
-    },
-
-    isInPersonas: function (scoringIds, subjectKey) {
-        if (!scoringIds) throw new Error('You must provide "scoringIds" argument when using the "isInPersonas" method.');
-        if (!subjectKey) throw new Error('You must provide "subjectKey" argument when using the "isInPersonas" method.');
-        
-        var headers = {};
-
-        headers[this.constants.headers.datasource] = this.datasource;
-        headers[this.constants.headers.subject] = subjectKey;
-        headers[this.constants.headers.ids] = scoringIds;
-
-        return this.call('/analytics/v1/scorings/personas/in', headers);
-    },
-
-    writeSentence: function (sentence) {
+    this.writeSentence = function (sentence) {
         if (!sentence) throw new Error('You must provide "sentence" argument when writing a sentence.');
 
         var newSentence = {
@@ -169,17 +118,68 @@ DECClient.prototype = {
         };
 
         this.sentences.push(newSentence);
+    };
+
+    this.addMapping = function (subjectKey, secondSubjectKey, secondDataSource) {
+        return this.writeSentence({
+            subjectKey: subjectKey,
+            mappedTo: [{
+                "S": secondSubjectKey,
+                "DS": secondDataSource
+            }]
+        });
     },
 
-    writeSubjectMetadata: function (metadata) {
+    this.isInCampaigns = function (campaignIds, subjectKey) {
+        if (!campaignIds) throw new Error('You must provide "campaignIds" argument when using the "isInCampaigns" method.');
+        if (!subjectKey) throw new Error('You must provide "subjectKey" argument when using the "isInCampaigns" method.');
+
+        var headers = {};
+
+        headers[this.constants.headers.subject] = subjectKey;
+        headers[this.constants.headers.ids] = campaignIds;
+        headers[this.constants.headers.datasource] = this.datasource;
+
+        return this.call('/analytics/v1/campaigns/isin', headers);
+    },
+
+    this.isInLeads = function (scoringIds, subjectKey) {
+        if (!scoringIds) throw new Error('You must provide "scoringIds" argument when using the "isInLeads" method.');
+        if (!subjectKey) throw new Error('You must provide "subjectKey" argument when using the "isInLeads" method.');
+
+        var headers = {};
+
+        headers[this.constants.headers.datasource] = this.datasource;
+        headers[this.constants.headers.subject] = subjectKey;
+        headers[this.constants.headers.ids] = scoringIds;
+
+        return this.call('/analytics/v2/scorings/leads/in', headers);
+    },
+
+    this.isInPersonas = function (scoringIds, subjectKey) {
+        if (!scoringIds) throw new Error('You must provide "scoringIds" argument when using the "isInPersonas" method.');
+        if (!subjectKey) throw new Error('You must provide "subjectKey" argument when using the "isInPersonas" method.');
+        
+        var headers = {};
+
+        headers[this.constants.headers.datasource] = this.datasource;
+        headers[this.constants.headers.subject] = subjectKey;
+        headers[this.constants.headers.ids] = scoringIds;
+
+        return this.call('/analytics/v1/scorings/personas/in', headers);
+    },
+
+    this.writeSubjectMetadata = function (subjectKey, metadata) {
+        if (!subjectKey) throw new Error('You must provide "subjectKey" argument when writing subject metadata.');
         if (!metadata) throw new Error('You must provide "metadata" argument when writing subject metadata.');
 
-        return writeSentence({
+        return this.writeSentence({
+            subjectKey: subjectKey,
             subjectMetadata: metadata
         });
     },
 
-    flushData: function () {
+    this.flushData = function () {
         var that = this,
             requestOptions = this.getSentencesRequestOptions(this, this.sentences);
 
