@@ -23,8 +23,7 @@ Create a `new DECClient()`, make sure to provide your data denter API key, a sou
 ```javascript
 var client = new DECClient({
      apiKey: 'your-api-key',
-     source: 'your-datasource-label',
-     authToken: 'appauth your-app-auth-key'
+     source: 'your-datasource-label'
 });
 ```
 
@@ -45,10 +44,11 @@ client.writeSentence({
 [Subject Metadata documentation](https://docs.sitefinity.com/dec/api-v2/for-developers-subjectmetadata)
 
 ```javascript
-client.writeSubjectMetadata({
-	'subjectKey': 'the-subject-key'
-	'FirstName': 'My first name',
-    'LastName': 'My last name'
+client.writeSubjectMetadata('the-subject-key', {
+    FirstName: 'first-name',
+    LastName: 'last-name',
+    Email: 'contact-email'
+    // additional meta fields...
 });
 ```
 
@@ -86,12 +86,18 @@ Make sure to include an `authToken`. This token is used by an authorized applica
 An Authorized Application can be configured by navigating to the "Authorized applications" section of your Data Center.
 
 ```javascript
-client.isInPersonas('1', 'subjectKey')
+client.isInPersonas('1', 'the-subject-key')
 .then(function (response) {
-	var personas = JSON.parse(response).items;
+    var personas = JSON.parse(response).items;
 
-	if (personas.length) {
-		// do something
-	}
+    if (personas.length) {
+        // do something
+    }
 })
+```
+
+**Example Response**
+
+```JSON
+{"items":[{"Id":1,"Score":100,"ThresholdPassedOn":"2017-08-11T01:45:21.120Z","Threshold":100}]}
 ```
