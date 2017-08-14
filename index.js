@@ -29,20 +29,19 @@ function DECClient (options) {
     this.source = options.source;
     this.authToken = options.authToken;
     this.apiServerUrl = options.apiServerUrl || this.constants.endpoints.apiServer;
-
     this.sentences = [];
 
     var getEndpointUrl = function (apiServer, apiKey, source) {
         return apiServer + '/collect/v2/data-centers/' + apiKey + '/datasources/' + source + '/interactions';
     };
  
-    var getSentencesRequestOptions = function (parameters, data, headers) {
+    this.getSentencesRequestOptions = function (parameters, data, headers) {
         if (data.length == 1) {
             data = data[0];
         }
  
-        var url = this.getEndpointUrl(parameters.apiServerUrl, parameters.apiKey, parameters.source);
-        var requestOptions = this.getRequestOptions(data, 'POST', url, headers);
+        var url = getEndpointUrl(parameters.apiServerUrl, parameters.apiKey, parameters.source);
+        var requestOptions = getRequestOptions(data, 'POST', url, headers);
  
         return requestOptions;
     };
@@ -61,19 +60,19 @@ function DECClient (options) {
         return requestOptions;
     };
 
-    var call = function (endpoint, headers) {
+    this.call = function (endpoint, headers) {
         if (!this.authToken) throw new Error('You must provide "authToken" when using the Personalization Client.');
 
         var url = this.apiServerUrl + endpoint;
-        var options = this.getRequestOptions(null, 'GET', url, headers);
+        var options = getRequestOptions(null, 'GET', url, headers);
 
         options.headers[this.constants.headers.authorization] = this.authToken;
         options.headers[this.constants.headers.datacenterkey] = this.apiKey;
 
-        return this.makeRequest(options);
+        return makeRequest(options);
     };
 
-    var makeRequest = function (options) {
+    this.makeRequest = function (options) {
         if (!options) throw new Error("options is required.");
         if (!options.method) throw new Error("options.method is required.");
         if (!options.url) throw new Error("options.url is required.");
@@ -109,7 +108,7 @@ function DECClient (options) {
 
 DECClient.prototype = {
     addMapping: function (subjectKey, secondSubjectKey, secondDataSource) {
-        return this.writeSentence({
+        return writeSentence({
             subjectKey: subjectKey,
             mappedTo: [{
                 "S": secondSubjectKey,
@@ -175,7 +174,7 @@ DECClient.prototype = {
     writeSubjectMetadata: function (metadata) {
         if (!metadata) throw new Error('You must provide "metadata" argument when writing subject metadata.');
 
-        return this.writeSentence({
+        return writeSentence({
             subjectMetadata: metadata
         });
     },
