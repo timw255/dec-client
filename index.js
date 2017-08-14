@@ -96,7 +96,7 @@ function DECClient (options) {
             }
 
             request(requestOptions, function (responseError, response, responseBody) {
-                if ((response.status >= 200 && response.status < 300) || response.status === 304) {
+                if ((response.statusCode >= 200 && response.statusCode < 300) || response.statusCode === 304) {
                     resolve(responseBody);
                 } else {
                     reject(responseBody);
@@ -138,7 +138,7 @@ function DECClient (options) {
 
         headers[this.constants.headers.subject] = subjectKey;
         headers[this.constants.headers.ids] = campaignIds;
-        headers[this.constants.headers.datasource] = this.datasource;
+        headers[this.constants.headers.datasource] = this.source;
 
         return this.call('/analytics/v1/campaigns/isin', headers);
     },
@@ -149,7 +149,7 @@ function DECClient (options) {
 
         var headers = {};
 
-        headers[this.constants.headers.datasource] = this.datasource;
+        headers[this.constants.headers.datasource] = this.source;
         headers[this.constants.headers.subject] = subjectKey;
         headers[this.constants.headers.ids] = scoringIds;
 
@@ -162,7 +162,7 @@ function DECClient (options) {
         
         var headers = {};
 
-        headers[this.constants.headers.datasource] = this.datasource;
+        headers[this.constants.headers.datasource] = this.source;
         headers[this.constants.headers.subject] = subjectKey;
         headers[this.constants.headers.ids] = scoringIds;
 
