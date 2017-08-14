@@ -1,7 +1,7 @@
 {
   "name": "dec-client",
   "version": "1.0.0",
-  "description": "Digital Experience Cloud client",
+  "description": "Digital Experience Cloud client for Node.js",
   "repository": {
   "type": "git",
   "url": "https://github.com/timw255/dec-client.git"
