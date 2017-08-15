@@ -1,6 +1,6 @@
 # Digital Experience Cloud Client
 
-Unofficial DEC SDK for the Sitefinity Digital Experience Cloud.
+Unofficial client for the Sitefinity Digital Experience Cloud.
 
 For additional information, please see [the Digital Experience Cloud documentation](https://docs.sitefinity.com/dec/api-v2/for-developers-track-and-integrate-data).
 
@@ -18,7 +18,7 @@ var DECClient = require('dec-client');
 
 ## Usage
 
-Create a `new DECClient()`, make sure to provide your data denter API key, a source label.
+Create a `new DECClient()`. Make sure to provide your data center API key, and a source label.
 
 ```javascript
 var client = new DECClient({
@@ -65,6 +65,7 @@ client.addMapping('the-subject-key', 'second-subject-key', 'second-datasource-la
 The client allows you to write multiple interactions [sentences] at a time. Once all interactions have been written, you must `flushData()` to actually send them to the DEC.
 
 ```javascript
+// returns a promise
 client.flushData();
 ```
 
@@ -72,7 +73,7 @@ client.flushData();
 
 You can make a call to the DEC to retrieve information about the subject's Personas, Campaigns, and Lead Scores.
 
-Create a `new DECClient()`, make sure to provide your data denter API key, a source label.
+Create a `new DECClient()`. Make sure to provide your data center API key, a source label, and an authToken.
 
 ```javascript
 var client = new DECClient({
@@ -81,9 +82,9 @@ var client = new DECClient({
      authToken: 'appauth your-app-auth-key'
 });
 ```
-Make sure to include an `authToken`. This token is used by an authorized application to request data from the personalization end-points. You can construct the token by concatenating the "appauth " string with the Access Key of the authorized application, for example: "appauth 94e8b2d2-931e-cd01-b57b-07fa2013cb24".
+The `authToken` is used by an authorized application to request data from the personalization end-points. You can construct the token by concatenating the "appauth " string with the Access Key of the authorized application, for example: "appauth 94e8b2d2-931e-cd01-b57b-07fa2013cb24".
 
-An Authorized Application can be configured by navigating to the "Authorized applications" section of your Data Center.
+An Authorized Application can be configured by navigating to the "Authorized applications" in the Administration section of your Data Center.
 
 ```javascript
 client.isInPersonas('1', 'the-subject-key')

@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 
 function DECClient (options) {
     this.constants = {
-        sdkVersion: "dec-client-1.0.10",
+        sdkVersion: "dec-client-1.0.12",
         endpoints: {
             apiServer: "https://api.dec.sitefinity.com"
         },
